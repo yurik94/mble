@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="it.tests.ikevin.mble" >
+
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="21" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="21" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_PRIVILEGED"
+        android:maxSdkVersion="21" />
+
+        <application
+            android:allowBackup="true"
+            android:label="@string/app_name"
+            android:name="it.tests.ikevin.mble.TumakuBLEApplication"
+            android:theme="@style/AppTheme" >
+            <activity
+                android:name="it.tests.ikevin.mble.MainActivity"
+                android:label="@string/app_name" >
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>
+            <activity
+                android:name="it.tests.ikevin.mble.DeviceActivity"
+                android:label="@string/app_name" >
+            </activity>
+            <activity
+                android:name="it.tests.ikevin.mble.ServiceActivity"
+                android:label="@string/app_name" >
+            </activity>
+            <activity
+                android:name="it.tests.ikevin.mble.HM10Activity"
+                android:label="@string/monitorHM10" >
+            </activity>
+            <activity
+                android:name="it.tests.ikevin.mble.BLEduinoUartActivity"
+                android:label="@string/monitorBLEduinoUart" >
+            </activity>
+        </application>
+
+    </manifest>
