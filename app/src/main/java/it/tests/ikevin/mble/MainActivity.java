@@ -65,6 +65,7 @@ public class MainActivity extends ListActivity
 	private boolean isScanning =false;
     private Handler mHandler = new Handler() ;
     private static Activity mActivity;
+	private SensorActivity mSensor;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,11 @@ public class MainActivity extends ListActivity
         mAdapter=new MySimpleArrayAdapter(mContext,mDeviceList);
         mListView.setAdapter(mAdapter);
         //listView.setAdapter(new LazyAdapter(this));
-        mListView.setOnItemClickListener(this);    	
+        mListView.setOnItemClickListener(this);
 
+        mSensor = new SensorActivity();
+
+        Log.d("LOL", "laaaaaaaaaaaaaaaaaaa");
 	}
 	
 	

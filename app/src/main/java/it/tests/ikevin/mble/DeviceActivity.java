@@ -68,7 +68,7 @@ public class DeviceActivity extends ListActivity
 	private String mDeviceName;
 	private TumakuBLE mTumakuBLE;
 	private int mState=STATE_DUMMY;
-	
+
 	private final static int STATE_DUMMY=0;
 	private final static int STATE_CONNECT=1;
 	private final static int STATE_CONNECTING=2;
@@ -116,7 +116,7 @@ public class DeviceActivity extends ListActivity
         mListView = getListView();
         mAdapter=new MySimpleArrayAdapter(this, mServices);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);    		
+        mListView.setOnItemClickListener(this);
 	}
 	
 	@Override
