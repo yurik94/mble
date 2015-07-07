@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".HM10Activity">
+    tools:context=".HM10Activity"
+    android:weightSum="1">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,7 +97,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="3dp" >
+        android:padding="3dp"
+        android:layout_weight="0.06">
 
         <Button
             android:id="@+id/buttonRead"
@@ -113,14 +115,6 @@
             android:layout_gravity="center"
             android:padding="3dp"
             android:text="@string/send" />
-        
-        <Button
-            android:id="@+id/buttonReset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="3dp"
-            android:text="@string/reset" />
 
         <Button
             android:id="@+id/buttonX"
@@ -129,5 +123,13 @@
             android:padding="3dp"
             android:text="SEND X" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="3dp"
+        android:text="@string/reset" />
 
 </LinearLayout>
