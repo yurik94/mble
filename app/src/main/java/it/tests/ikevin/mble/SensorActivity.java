@@ -1,39 +1,50 @@
 package it.tests.ikevin.mble;
 
-import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 
-/**
- * Created by AnnaMaria on 07/07/2015.
- */
-public class SensorActivity extends Activity implements SensorEventListener {
+public class SensorActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     Sensor accelerometer;
     Sensor magnetometer;
+    private MainActivity mainActivity;
+    private ProgressBar progressAzimut, progressPitch, progressRoll;
+    private EditText azimutText, pitchText, rollText;
 
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.d("SensorActivity", "Creating..");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.device_list);    // Register the sensor listeners
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+    public SensorActivity(MainActivity main)
+    {
+        mainActivity = main;
+
+        mSensorManager = (SensorManager)mainActivity.getSystemService(mainActivity.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        progressAzimut = (ProgressBar)mainActivity.findViewById(R.id.progressAzimut);
+        progressPitch = (ProgressBar)mainActivity.findViewById(R.id.progressPitch);
+        progressRoll = (ProgressBar)mainActivity.findViewById(R.id.progressBarRoll);
+
+        azimutText = (EditText)mainActivity.findViewById(R.id.azimut);
+        azimutText.setInputType(InputType.TYPE_NULL);
+        pitchText = (EditText)mainActivity.findViewById(R.id.pitch);
+        pitchText.setInputType(InputType.TYPE_NULL);
+        rollText = (EditText)mainActivity.findViewById(R.id.roll);
+        rollText.setInputType(InputType.TYPE_NULL);
+
     }
 
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
-        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+    public void onResume() {
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    protected void onPause() {
-        super.onPause();
+    public void onPause() {
         mSensorManager.unregisterListener(this);
     }
 
@@ -55,14 +66,22 @@ public class SensorActivity extends Activity implements SensorEventListener {
             if (success) {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                float azimut = orientation[0]; // orientation contains: azimut, pitch and roll
-                float pitch = orientation[1];
-                float roll = orientation[2];
 
-                Log.d("ANGLE", "Azimut: " + azimut + " - Pitch: " + pitch + " - Roll: " + roll);
+                int azimut = (int)Math.toDegrees(orientation[0]);
+                int pitch = (int)Math.toDegrees(orientation[1]);
+                int roll = (int)Math.toDegrees(orientation[2]);
+                if (azimut < 0) {
+                    azimut += 360;
+                }
+                roll+=180;
+                azimutText.setText(String.valueOf(azimut));
+                pitchText.setText(String.valueOf(pitch));
+                rollText.setText(String.valueOf(roll));
+
+                progressAzimut.setProgress(azimut);
+                progressPitch.setProgress(pitch);
+                progressRoll.setProgress(roll);
             }
-
-            Log.d("ANGLE", "loL");
         }
     }
 }

@@ -47,6 +47,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,7 +82,7 @@ public class DeviceActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 		Log.i("JMG","DeviceActivity triggered OnCreate()");
 		mContext=this;
-        setContentView(R.layout.device_list);           
+        setContentView(R.layout.device_list);
 		mBroadcastReceiver= new BLEDeviceBroadcastReceiver();
 		mHeaderText= (TextView) findViewById(R.id.header);
 		mServices=new ArrayList<TumakuBLE.ServiceType>();

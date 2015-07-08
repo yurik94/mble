@@ -46,7 +46,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,11 +68,14 @@ public class MainActivity extends ListActivity
 	private boolean isScanning =false;
     private Handler mHandler = new Handler() ;
     private static Activity mActivity;
-	private SensorActivity mSensor;
-    
+
+    private Button btnScan;
+	private SensorActivity sensor;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.device_list);
 		mActivity=this;
 		mContext=this;
 		mDeviceList=new ArrayList<BluetoothDevice>();
@@ -83,9 +89,7 @@ public class MainActivity extends ListActivity
         //listView.setAdapter(new LazyAdapter(this));
         mListView.setOnItemClickListener(this);
 
-        mSensor = new SensorActivity();
-
-        Log.d("LOL", "laaaaaaaaaaaaaaaaaaa");
+        sensor = new SensorActivity(this);
 	}
 	
 	
@@ -124,11 +128,13 @@ public class MainActivity extends ListActivity
 		super.onResume();
 		mAdapter.clear();
 		TumakuBLE.setup();
+        sensor.onResume();
 	}
     
 	@Override
 	protected void onPause() {
 		super.onStop();
+        sensor.onPause();
 		//Make sure that there is no pending Callback
         mHandler.removeCallbacks(mStopRunnable);
 		if (isScanning) {
@@ -175,7 +181,7 @@ public class MainActivity extends ListActivity
     };
 
     
-    private void scan() {
+    public void scan() {
     	if (isScanning) { //stop scanning
  		    configureScan(false);
     		mTumakuBLE.stopLeScan();
