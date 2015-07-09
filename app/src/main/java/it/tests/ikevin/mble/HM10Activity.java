@@ -24,6 +24,7 @@
  */
 package it.tests.ikevin.mble;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,6 @@ public class HM10Activity extends Activity {
 	 * does not require to be enabled. To interact with this service, only the notification mechanism 
 	 * applies (read value is not supported - to be confirmed)
 	 */
-			
 
 	private final static int WSTATE_CONNECT=0;
 	private final static int WSTATE_SEARCH_SERVICES=1;
@@ -87,7 +87,8 @@ public class HM10Activity extends Activity {
 	private int mState=0;
 	
 	private TumakuBLE  mTumakuBLE=null;
-	
+
+	private SensorActivity sensor;
     
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,30 +144,30 @@ public class HM10Activity extends Activity {
             }
         });
 
-        mButtonSendX.setOnTouchListener(new View.OnTouchListener() {
+        mButtonSendX.setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if ((mState==WSTATE_DUMMY)) {
-                    mState=WSTATE_WRITE_X;
+            public void onClick(View v) {
+                if ((mState == WSTATE_DUMMY)) {
+                    mState = WSTATE_WRITE_X;
                     nextState();
                 }
-
-                return false;
             }
         });
         
         mButtonReset.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                mState = WSTATE_CONNECT;
-                mTumakuBLE.resetTumakuBLE();
-                mTumakuBLE.setDeviceAddress(mDeviceAddress);
-                updateInfoText("Reset connection to device");
-                mTextLongReceived.setText("");
-                nextState();
+			public void onClick(View v) {
+				mState = WSTATE_CONNECT;
+				mTumakuBLE.resetTumakuBLE();
+				mTumakuBLE.setDeviceAddress(mDeviceAddress);
+				updateInfoText("Reset connection to device");
+				mTextLongReceived.setText("");
+				nextState();
 
-            }
-        });
-	
+			}
+		});
+
+
+		sensor = new SensorActivity(this);
 	}
 	
 	@Override
@@ -189,7 +190,8 @@ public class HM10Activity extends Activity {
 			nextState();
 		 	updateInfoText("Start connection to device");
 		}
-		
+
+		sensor.onResume();
 	}
 	
 	@Override
@@ -197,8 +199,8 @@ public class HM10Activity extends Activity {
 		super.onStop();
         this.unregisterReceiver(this.mBroadcastReceiver);      
 	}
-	
-			
+
+
 	
 		protected void nextState(){
 			switch(mState) {			   
@@ -228,11 +230,34 @@ public class HM10Activity extends Activity {
 		   	       mTumakuBLE.write(TumakuBLE.SENSORTAG_KEY_SERVICE, TumakuBLE.SENSORTAG_KEY_DATA, tmpArray);
 				   break;
 
-                case(WSTATE_WRITE_X):
+               case(WSTATE_WRITE_X):
                     if (Constant.DEBUG) Log.i("JMG","State Write State X");
+					/*
                     tmpArray = new byte[1];
                     tmpArray[0] = (byte)'X';
-                    mTumakuBLE.write(TumakuBLE.SENSORTAG_KEY_SERVICE,TumakuBLE.SENSORTAG_KEY_DATA, tmpArray);
+					*/
+/*
+                   short a, b, c;
+                   a = (short)sensor.azimut;
+                   b = (short)sensor.pitch;
+                   c = (short)sensor.roll;
+
+                   ByteBuffer buffer = ByteBuffer.allocate(10);
+
+                   buffer.putChar('*');
+                   buffer.putShort(a);
+                   buffer.putShort(b);
+                   buffer.putShort(c);
+                   buffer.putChar('#');
+*/
+                   byte a = 0;
+                   byte b = -127;
+
+                   ByteBuffer buffer = ByteBuffer.allocate(2);
+                   buffer.put(a);
+                   buffer.put(b);
+
+                    mTumakuBLE.write(TumakuBLE.SENSORTAG_KEY_SERVICE,TumakuBLE.SENSORTAG_KEY_DATA, buffer.array());
                     break;
 
 
@@ -396,6 +421,10 @@ public class HM10Activity extends Activity {
  
    
        }
-       
     }
+
+	protected void onPause()
+	{
+		sensor.onPause();
+	}
 }

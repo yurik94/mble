@@ -14,11 +14,13 @@ public class SensorActivity implements SensorEventListener {
     private SensorManager mSensorManager;
     Sensor accelerometer;
     Sensor magnetometer;
-    private MainActivity mainActivity;
+    private HM10Activity mainActivity;
     private ProgressBar progressAzimut, progressPitch, progressRoll;
     private EditText azimutText, pitchText, rollText;
 
-    public SensorActivity(MainActivity main)
+    public int azimut, pitch, roll;
+
+    public SensorActivity(HM10Activity main)
     {
         mainActivity = main;
 
@@ -67,20 +69,20 @@ public class SensorActivity implements SensorEventListener {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
 
-                int azimut = (int)Math.toDegrees(orientation[0]);
-                int pitch = (int)Math.toDegrees(orientation[1]);
-                int roll = (int)Math.toDegrees(orientation[2]);
+                azimut = (int)Math.toDegrees(orientation[0]);
+                pitch = (int)Math.toDegrees(orientation[1]);
+                roll = (int)Math.toDegrees(orientation[2]);
                 if (azimut < 0) {
                     azimut += 360;
                 }
-                roll+=180;
+
                 azimutText.setText(String.valueOf(azimut));
                 pitchText.setText(String.valueOf(pitch));
                 rollText.setText(String.valueOf(roll));
 
                 progressAzimut.setProgress(azimut);
-                progressPitch.setProgress(pitch);
-                progressRoll.setProgress(roll);
+                progressPitch.setProgress(pitch+90);
+                progressRoll.setProgress(roll+90);
             }
         }
     }

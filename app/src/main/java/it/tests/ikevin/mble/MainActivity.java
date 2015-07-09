@@ -70,7 +70,6 @@ public class MainActivity extends ListActivity
     private static Activity mActivity;
 
     private Button btnScan;
-	private SensorActivity sensor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,6 @@ public class MainActivity extends ListActivity
         //listView.setAdapter(new LazyAdapter(this));
         mListView.setOnItemClickListener(this);
 
-        sensor = new SensorActivity(this);
 	}
 	
 	
@@ -128,13 +126,11 @@ public class MainActivity extends ListActivity
 		super.onResume();
 		mAdapter.clear();
 		TumakuBLE.setup();
-        sensor.onResume();
 	}
     
 	@Override
 	protected void onPause() {
 		super.onStop();
-        sensor.onPause();
 		//Make sure that there is no pending Callback
         mHandler.removeCallbacks(mStopRunnable);
 		if (isScanning) {
