@@ -5,7 +5,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.text.InputType;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -15,10 +14,10 @@ public class SensorActivity implements SensorEventListener {
     Sensor accelerometer;
     Sensor magnetometer;
     private HM10Activity mainActivity;
-    private ProgressBar progressAzimut, progressPitch, progressRoll;
-    private EditText azimutText, pitchText, rollText;
+    private ProgressBar progressPitch, progressRoll;
+    private EditText pitchText, rollText;
 
-    public int azimut, pitch, roll;
+    public int pitch, roll;
 
     public SensorActivity(HM10Activity main)
     {
@@ -28,12 +27,9 @@ public class SensorActivity implements SensorEventListener {
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        progressAzimut = (ProgressBar)mainActivity.findViewById(R.id.progressAzimut);
         progressPitch = (ProgressBar)mainActivity.findViewById(R.id.progressPitch);
         progressRoll = (ProgressBar)mainActivity.findViewById(R.id.progressBarRoll);
 
-        azimutText = (EditText)mainActivity.findViewById(R.id.azimut);
-        azimutText.setInputType(InputType.TYPE_NULL);
         pitchText = (EditText)mainActivity.findViewById(R.id.pitch);
         pitchText.setInputType(InputType.TYPE_NULL);
         rollText = (EditText)mainActivity.findViewById(R.id.roll);
@@ -42,8 +38,8 @@ public class SensorActivity implements SensorEventListener {
     }
 
     public void onResume() {
-        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     public void onPause() {
@@ -69,20 +65,16 @@ public class SensorActivity implements SensorEventListener {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
 
-                azimut = (int)Math.toDegrees(orientation[0]);
-                pitch = (int)Math.toDegrees(orientation[1]);
-                roll = (int)Math.toDegrees(orientation[2]);
-                if (azimut < 0) {
-                    azimut += 360;
-                }
+                pitch += (int)Math.toDegrees(orientation[1]);
+                roll += (int)Math.toDegrees(orientation[2]);
 
-                azimutText.setText(String.valueOf(azimut));
+                pitch/=2; roll/=2;
+
+                progressPitch.setProgress(pitch + 90);
+                progressRoll.setProgress(roll + 90);
+
                 pitchText.setText(String.valueOf(pitch));
                 rollText.setText(String.valueOf(roll));
-
-                progressAzimut.setProgress(azimut);
-                progressPitch.setProgress(pitch+90);
-                progressRoll.setProgress(roll+90);
             }
         }
     }

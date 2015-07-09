@@ -25,8 +25,9 @@
 package it.tests.ikevin.mble;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -35,14 +36,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +77,7 @@ public class HM10Activity extends Activity {
 	private Button mButtonSend;
 	private Button mButtonReset;
 	private Button mButtonSendX;
+    private Button mButtonTimer;
 
 	private Context mContext;
 	private HM10BroadcastReceiver mBroadcastReceiver;
@@ -89,7 +87,9 @@ public class HM10Activity extends Activity {
 	private TumakuBLE  mTumakuBLE=null;
 
 	private SensorActivity sensor;
-    
+    Timer timer = null;
+    TimerTask sendData = null;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +112,7 @@ public class HM10Activity extends Activity {
         mButtonSend= (Button) findViewById(R.id.buttonSend);
 		mButtonSendX= (Button) findViewById(R.id.buttonX);
         mButtonReset= (Button) findViewById(R.id.buttonReset);
-
+        mButtonTimer = (Button) findViewById(R.id.buttonTimer);
         
         mButtonRead.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -143,28 +143,36 @@ public class HM10Activity extends Activity {
                     */
             }
         });
-
-        mButtonSendX.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((mState == WSTATE_DUMMY)) {
-                    mState = WSTATE_WRITE_X;
-                    nextState();
-                }
-            }
-        });
         
         mButtonReset.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				mState = WSTATE_CONNECT;
-				mTumakuBLE.resetTumakuBLE();
+				TumakuBLE.resetTumakuBLE();
 				mTumakuBLE.setDeviceAddress(mDeviceAddress);
 				updateInfoText("Reset connection to device");
 				mTextLongReceived.setText("");
 				nextState();
-
 			}
 		});
+
+        mButtonTimer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(timer==null)
+                {
+                    sendData = new SendDataTask();
+                    timer = new Timer();
+                    timer.scheduleAtFixedRate(sendData, 0, 1000);
+                }
+                else
+                {
+                    sendData = null;
+                    timer.cancel();
+                    timer = null;
+                }
+            }
+        });
+
 
 
 		sensor = new SensorActivity(this);
@@ -231,42 +239,36 @@ public class HM10Activity extends Activity {
 				   break;
 
                case(WSTATE_WRITE_X):
-                    if (Constant.DEBUG) Log.i("JMG","State Write State X");
-					/*
-                    tmpArray = new byte[1];
-                    tmpArray[0] = (byte)'X';
-					*/
-/*
-                   short a, b, c;
-                   a = (short)sensor.azimut;
-                   b = (short)sensor.pitch;
-                   c = (short)sensor.roll;
+                    if (Constant.DEBUG) Log.i("JMG","State Write State SEND GYRO DATA");
 
                    ByteBuffer buffer = ByteBuffer.allocate(10);
 
                    buffer.putChar('*');
-                   buffer.putShort(a);
-                   buffer.putShort(b);
-                   buffer.putShort(c);
-                   buffer.putChar('#');
-*/
-                   byte a = 0;
-                   byte b = -127;
-
-                   ByteBuffer buffer = ByteBuffer.allocate(2);
-                   buffer.put(a);
-                   buffer.put(b);
+                   buffer.putShort((short) sensor.pitch);
+				   buffer.putChar('#');
+				   buffer.putShort((short) sensor.roll);
+                   buffer.putChar('%');
 
                     mTumakuBLE.write(TumakuBLE.SENSORTAG_KEY_SERVICE,TumakuBLE.SENSORTAG_KEY_DATA, buffer.array());
                     break;
 
-
 			   default:
 				   
 			}			
-			
+
 		}
-		
+
+    class SendDataTask extends TimerTask {
+
+        public void run() {
+            //calculate the new position of myBall
+            if ((mState==WSTATE_DUMMY)) {
+                mState=WSTATE_WRITE_X;
+                nextState();
+            }
+
+        }
+    }
 
 
 		protected void updateInfoText(String text) {
@@ -324,16 +326,16 @@ public class HM10Activity extends Activity {
 			       if (Constant.DEBUG) Log.i("JMG","DEVICE_DISCONNECTED message received with full reset flag");
 	    		   Toast.makeText(mContext, "Unrecoverable BT error received. Launching full reset", Toast.LENGTH_SHORT).show();    
 	        	   mState=WSTATE_CONNECT;
-	       		   mTumakuBLE.resetTumakuBLE();
+	       		   TumakuBLE.resetTumakuBLE();
 	       		   mTumakuBLE.setDeviceAddress(mDeviceAddress);
-	       		   mTumakuBLE.setup();
+	       		   TumakuBLE.setup();
 	        	   nextState();
 	        	   return;	    		   
 	    	   } else {		       		       
 			       if (mState!=WSTATE_CONNECT){
 		    		   Toast.makeText(mContext, "Device disconnected unexpectedly. Reconnecting.", Toast.LENGTH_SHORT).show();    
 		        	   mState=WSTATE_CONNECT;
-		       		   mTumakuBLE.resetTumakuBLE();
+		       		   TumakuBLE.resetTumakuBLE();
 		       		   mTumakuBLE.setDeviceAddress(mDeviceAddress);
 		        	   nextState();
 		        	   return;

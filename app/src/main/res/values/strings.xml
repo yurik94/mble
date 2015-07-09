@@ -10,6 +10,7 @@
     <string name="read">Read</string>
     <string name="send">Send</string>
     <string name="reset">Reset</string>
+    <string name="timer">tmr</string>
     <string name="reconnect">Reconnect</string>
     <string name="intensity">Intensity</string>
     <string name="button1">Button 1</string>

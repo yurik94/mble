@@ -103,32 +103,43 @@
 
         <Button
             android:id="@+id/buttonRead"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="@string/read" />
+            android:text="@string/read"
+            android:width="25dp" />
 
         <Button
             android:id="@+id/buttonSend"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="@string/send" />
+            android:text="@string/send"
+            android:width="25dp" />
 
         <Button
             android:id="@+id/buttonX"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="SEND X" />
+            android:text="SEND X"
+            android:width="25dp" />
 
         <Button
             android:id="@+id/buttonReset"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:padding="3dp"
             android:text="@string/reset"
-            android:layout_weight="0.47" />
+            android:width="25dp" />
+
+        <Button
+            android:id="@+id/buttonTimer"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:text="@string/timer"
+            android:width="25dp" />
 
     </LinearLayout>
 
@@ -137,14 +148,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1" >
-
-        <EditText
-            android:layout_width="57dp"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/azimut"
-            android:editable="false" />
 
         <Space
             android:layout_width="wrap_content"
@@ -174,13 +177,16 @@
 
     </LinearLayout>
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressAzimut"
-        android:max="360"
-        android:indeterminate="false" />
+        android:id="@+id/progressPitch"
+        android:max="180" />
 
     <Space
         android:layout_width="match_parent"
@@ -190,16 +196,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressPitch" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="15dp" />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBarRoll" />
+        android:id="@+id/progressBarRoll"
+        android:max="180" />
 
 </LinearLayout>
