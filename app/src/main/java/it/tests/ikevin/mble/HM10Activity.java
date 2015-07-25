@@ -24,11 +24,6 @@
  */
 package it.tests.ikevin.mble;
 
-import java.nio.ByteBuffer;
-import java.sql.Time;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,6 +37,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.nio.ByteBuffer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HM10Activity extends Activity {
 	
