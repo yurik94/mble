@@ -27,5 +27,5 @@ package it.tests.ikevin.mble;
 
 public class Constant {
 
-	public static boolean DEBUG =true;
+	public static boolean DEBUG = true;
 }
