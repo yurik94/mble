@@ -34,6 +34,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -160,12 +162,14 @@ public class HM10Activity extends Activity {
             public void onClick(View v) {
                 if(timer==null)
                 {
+					mButtonTimer.setTextColor(Color.GREEN);
                     sendData = new SendDataTask();
                     timer = new Timer();
-                    timer.scheduleAtFixedRate(sendData, 0, 1000);
+                    timer.scheduleAtFixedRate(sendData, 0, 50);
                 }
                 else
                 {
+					mButtonTimer.setTextColor(Color.RED);
                     sendData = null;
                     timer.cancel();
                     timer = null;
@@ -244,9 +248,9 @@ public class HM10Activity extends Activity {
                    ByteBuffer buffer = ByteBuffer.allocate(10);
 
                    buffer.putChar('*');
-                   buffer.putShort((short) sensor.pitch);
+                   buffer.putShort((short) sensor.roll);
 				   buffer.putChar('#');
-				   buffer.putShort((short) sensor.roll);
+				   buffer.putShort((short) sensor.pitch);
                    buffer.putChar('%');
 
                     mTumakuBLE.write(TumakuBLE.SENSORTAG_KEY_SERVICE,TumakuBLE.SENSORTAG_KEY_DATA, buffer.array());

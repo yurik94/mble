@@ -139,7 +139,8 @@
             android:layout_height="wrap_content"
             android:padding="3dp"
             android:text="@string/timer"
-            android:width="25dp" />
+            android:width="25dp"
+            android:textColor="#ff0800" />
 
     </LinearLayout>
 

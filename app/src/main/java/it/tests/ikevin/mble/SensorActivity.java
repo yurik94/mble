@@ -70,6 +70,9 @@ public class SensorActivity implements SensorEventListener {
 
                 pitch/=2; roll/=2;
 
+                pitch = Math.min(Math.max(pitch, -90), 90);
+                roll = Math.min(Math.max(roll, -90), 90);
+
                 progressPitch.setProgress(pitch + 90);
                 progressRoll.setProgress(roll + 90);
 
